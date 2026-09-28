@@ -1,0 +1,8 @@
+project_id = "schofy"
+
+[auth]
+site_url = "http://127.0.0.1:5174/workspace"
+additional_redirect_urls = ["http://127.0.0.1:5174/workspace", "http://127.0.0.1:5174/workspace?recovery=1", "http://localhost:5174/workspace", "http://localhost:5174/workspace?recovery=1"]
+
+[auth.email]
+enable_confirmations = true

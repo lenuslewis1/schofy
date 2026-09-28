@@ -1,0 +1,16 @@
+/* Content is visible by default; the observer enables motion only when supported. */
+.ns-landing .ns-motion-word{display:inline-block}
+.ns-motion-active .ns-motion-pending:not([data-motion-heading]){opacity:0;translate:0 22px;transition:opacity .65s ease var(--reveal-delay,0ms),translate .8s cubic-bezier(.22,1,.36,1) var(--reveal-delay,0ms)}
+.ns-motion-active .ns-motion-pending.ns-motion-visible:not([data-motion-heading]){opacity:1;translate:0 0}
+.ns-motion-active [data-motion-heading] .ns-motion-word{opacity:0;transform:translateY(22px) rotate(1deg);transition:opacity .55s ease var(--word-delay),transform .8s cubic-bezier(.22,1,.36,1) var(--word-delay)}
+.ns-motion-active [data-motion-heading].ns-motion-visible .ns-motion-word{opacity:1;transform:none}
+.ns-landing .ns-hero h1>.ns-motion-word{white-space:normal}
+.ns-motion-active .ns-hero h1 svg path{stroke-dasharray:500;stroke-dashoffset:500;transition:stroke-dashoffset 1s cubic-bezier(.22,1,.36,1) .65s}
+.ns-motion-active .ns-hero h1.ns-motion-visible svg path{stroke-dashoffset:0}
+.ns-motion-active .ns-product-stage>.ns-preview{transform:translateY(var(--stage-depth,0px));transition:transform .12s linear}
+.ns-landing .ns-nav nav a{position:relative}
+.ns-landing .ns-nav nav a:after{content:'';position:absolute;left:0;right:0;bottom:-7px;height:2px;background:#7eccc0;transform:scaleX(0);transform-origin:left;transition:transform .25s ease}
+.ns-landing .ns-nav nav a:hover:after,.ns-landing .ns-nav nav a:focus-visible:after{transform:scaleX(1)}
+.ns-landing .ns-features article button svg,.ns-landing .ns-discover>a>svg{transition:transform .25s ease}
+.ns-landing .ns-features article button:hover svg,.ns-landing .ns-discover>a:hover>svg{transform:translate(3px,-3px)}
+@media(prefers-reduced-motion:reduce){.ns-landing .ns-motion-pending,.ns-landing .ns-motion-word{opacity:1!important;translate:none!important;transform:none!important;transition:none!important}.ns-landing .ns-hero h1 svg path{stroke-dashoffset:0!important}.ns-landing .ns-product-stage>.ns-preview{transform:none!important}.ns-landing .ns-nav nav a:after{transition:none}}

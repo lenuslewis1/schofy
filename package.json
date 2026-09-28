@@ -1,0 +1,26 @@
+{
+  "name": "schofy-school-management",
+  "private": true,
+  "version": "0.1.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "test": "node --test tests/*.test.mjs",
+    "build": "vite build && node scripts/build-pages.mjs",
+    "preview": "vite preview",
+    "start": "node server/start.mjs"
+  },
+  "dependencies": {
+    "@supabase/supabase-js": "2.117.2",
+    "@vitejs/plugin-react": "latest",
+    "lucide-react": "latest",
+    "react": "latest",
+    "react-dom": "latest",
+    "typescript": "latest",
+    "vite": "latest",
+    "xlsx": "https://cdn.sheetjs.com/xlsx-0.20.3/xlsx-0.20.3.tgz"
+  },
+  "devDependencies": {
+    "@electric-sql/pglite": "0.5.8"
+  }
+}

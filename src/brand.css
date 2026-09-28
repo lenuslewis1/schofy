@@ -1,0 +1,42 @@
+/* Schofy brand: deep green primary, warm orange accent, cream canvas. */
+.ns-day-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:24px}
+.ns-day-grid article{background:#e6f1ed;border-radius:24px;padding:32px;display:flex;flex-direction:column}
+.ns-day-top{display:flex;align-items:center;justify-content:space-between;color:#225e56}
+.ns-day-top span{font-size:42px;color:#225e5640;font-weight:700}
+.ns-day-grid h3{font-size:23px;line-height:1.3;margin:24px 0 12px}
+.ns-day-grid p{font-size:14px;line-height:1.8;color:#66756e;margin:0 0 26px}
+.ns-day-grid button{display:flex;align-items:center;gap:10px;background:transparent;color:#225e56;font-weight:600;font-size:13px;padding:0;margin-top:auto;text-align:left}
+.ns-day-grid article:nth-child(2){background:#fff0e6}.ns-day-grid article:nth-child(3){background:#f1f3e8}
+.ns-onboarding{display:grid;grid-template-columns:1fr 1fr;gap:70px;align-items:center;background:#e6f1ed;border-radius:32px;padding:55px!important}
+.ns-onboarding h2{font-size:clamp(32px,4vw,48px);line-height:1.15;margin:20px 0}
+.ns-onboarding p{color:#66756e;font-size:14px;line-height:1.8;max-width:460px}
+.ns-onboarding .ns-button{margin-top:20px}.ns-onboarding ol{list-style:none;padding:0;margin:0;display:grid;gap:26px}
+.ns-onboarding li{display:flex;align-items:flex-start;gap:20px}.ns-onboarding li>span{display:grid;place-items:center;flex-shrink:0;width:44px;height:44px;border-radius:50%;background:#225e56;color:white;font-size:13px}
+.ns-onboarding h3{font-size:20px;margin:2px 0 6px}.ns-onboarding li p{margin:0;font-size:13px}
+@media(max-width:760px){.ns-day-grid{grid-template-columns:1fr}.ns-day-grid article{padding:26px}.ns-onboarding{grid-template-columns:1fr;gap:35px;padding:30px 24px!important;border-radius:24px;margin-left:20px!important;margin-right:20px!important}.ns-onboarding li{gap:14px}}
+:root{--brand-green:#225e56;--brand-green-hover:#194b44;--brand-orange:#fa6d3b;--brand-mint:#e6f1ed;--brand-cream:#fffdf6;--teal:var(--brand-green)}
+.ns-landing{--canvas:var(--brand-cream);--lime:var(--brand-mint);--ink:#203d36;--gray:#66756e}
+.ns-mark,.auth-brand>span:first-child,.brand-mark{background:var(--brand-green);color:white;box-shadow:none}
+.ns-landing .ns-button,.auth-primary,.app-shell .primary,.app-shell .primary.header-add{background:var(--brand-green)!important;color:white;box-shadow:none}
+.ns-landing .ns-button:hover,.auth-primary:hover,.app-shell .primary:hover{background:var(--brand-green-hover)!important;box-shadow:0 6px 18px #225e5620}
+.ns-hero .ns-button{background:var(--brand-orange)!important;color:#fff}
+.ns-hero .ns-button:hover{background:#df5728!important}
+.ns-text-button{background:var(--brand-green)!important;color:white!important;padding:14px 22px;border-radius:40px}
+.ns-text-button>span{background:transparent;border-color:#ffffff55}
+.ns-kicker,.auth-kicker,.ns-features article>small,.auth-links button{color:var(--brand-green)}
+.ns-preview-heading,.ns-final,.school-welcome{background:linear-gradient(120deg,#31796a,var(--brand-green))!important;color:white}
+.ns-final .ns-kicker,.ns-final p,.ns-final>small{color:#e6f1ed}
+.ns-landing .ns-button.dark{background:var(--brand-orange)!important;color:white}
+.ns-eyebrow>span{background:var(--brand-green);box-shadow:0 0 0 4px var(--brand-mint)}
+.ns-hero h1 svg{stroke:var(--brand-orange)}
+.ns-tabs button.active span,.calendar-week button.selected{background:var(--brand-green);border-color:var(--brand-green);color:white}
+.ns-feature-icon,.ns-school>span,.signup-fields legend>span,.app-shell .large-icon{background:var(--brand-mint);color:var(--brand-green)}
+.ns-demo-stats strong,.ns-demo-stats>div:nth-child(3) strong,.ns-demo-stats>div:nth-child(4) strong,.stat-tile.cyan,.stat-tile.magenta,.stat-tile.pink{background:linear-gradient(135deg,#438e7b,var(--brand-green))}
+.ns-demo-stats>div:nth-child(2) strong,.stat-tile.coral{background:linear-gradient(135deg,#fa9062,var(--brand-orange))}
+.auth-page{background:var(--brand-cream)}
+.auth-card input:focus,.signup-grid select:focus-visible{outline-color:var(--brand-green)}
+.signup-fields legend,.signup-submit>p svg,.rail-actions button,.rail-actions button span,.app-shell .attendance-total{color:var(--brand-green)}
+.signup-next,.cloud-account{background:var(--brand-mint);color:var(--brand-green)}
+.app-shell .bar{background:#91bcab}.app-shell .bar:hover{background:var(--brand-green)}
+.app-shell .avatar{background:var(--brand-mint);color:var(--brand-green)}
+.ns-landing button:focus-visible,.ns-landing a:focus-visible,.app-shell button:focus-visible{outline-color:var(--brand-green)}
