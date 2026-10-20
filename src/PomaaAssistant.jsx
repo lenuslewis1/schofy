@@ -34,6 +34,7 @@ const PomaaRecordReview=lazy(()=>import('./PomaaRecordReview'))
 
 
 const starters=[['School briefing','Give me a concise briefing on my school records and three useful priorities for today.'],['Fees & follow-up','Help me understand fee balances and what to follow up on.'],['Lesson planning','Help me plan a lesson. Ask me for the class, subject, topic and duration first.'],['Write a message','Help me draft a school announcement. Ask what I want to communicate and who it is for.'],['Add sample records','Populate my school with some dummy data.']]
+const startersFor=(role,allowed)=>starters.filter(([label])=>label==='School briefing'||label==='Fees & follow-up'&&allowed.includes('fees')||label==='Lesson planning'&&['Admin','Teacher'].includes(role)||label==='Write a message'&&allowed.includes('communications')&&!['Student','Parent'].includes(role)||label==='Add sample records'&&role==='Admin')
 
 
 
@@ -126,7 +127,7 @@ export default function PomaaAssistant({db,role,identity,allowed,page,go,update,
 
 
 
-  async function saveDraft(e){e.preventDefault();if(review?.type==='draft_resource'){if(!draft.trim()||['Parent','Student'].includes(role)||!allowed.includes(review.module))return;try{await commitImport(d=>({...d,aiResources:[{id:crypto.randomUUID(),title:review.label,module:review.module,body:draft.trim(),role,date:new Date().toISOString()},...(d.aiResources||[])].slice(0,100)}),'Saved reviewed Pomaa resource');setReview(null);setSaved('Reviewed resource saved in AI workflows & resources. School records have not been changed.')}catch(err){setError(err.message)}return;}if(!draft.trim()||!allowed.includes('communications')||['Parent','Student'].includes(role))return;try{await commitImport(d=>({...d,messages:[{id:crypto.randomUUID(),channel,recipient,body:draft.trim(),status:'Draft',date:new Date().toISOString(),author:`${role} · Pomaa assisted`},...(d.messages||[])]}),'Saved reviewed Pomaa message draft');setReview(null);setSaved('Draft saved in Communications. Nothing has been sent.')}catch(err){setError(err.message)}}
+  async function saveDraft(e){e.preventDefault();if(review?.type==='draft_resource'){if(!draft.trim()||['Parent','Student'].includes(role)||!allowed.includes(review.module))return;try{await commitImport(d=>({...d,aiResources:[{id:crypto.randomUUID(),title:review.label,module:review.module,body:draft.trim(),role,date:new Date().toISOString(),authorId:identity},...(d.aiResources||[])].slice(0,100)}),'Saved reviewed Pomaa resource');setReview(null);setSaved('Reviewed resource saved in AI workflows & resources. School records have not been changed.')}catch(err){setError(err.message)}return;}if(!draft.trim()||!allowed.includes('communications')||['Parent','Student'].includes(role))return;try{await commitImport(d=>({...d,messages:[{id:crypto.randomUUID(),channel,recipient,body:draft.trim(),status:'Draft',date:new Date().toISOString(),author:`${role} · Pomaa assisted`,authorId:identity},...(d.messages||[])]}),'Saved reviewed Pomaa message draft');setReview(null);setSaved('Draft saved in Communications. Nothing has been sent.')}catch(err){setError(err.message)}}
 
 
 
@@ -134,7 +135,7 @@ export default function PomaaAssistant({db,role,identity,allowed,page,go,update,
 
 
 
-    {page==='overview'&&<section className="pomaa-intro" aria-label="Pomaa school assistant"><div className="pomaa-orb"><Sparkles size={26}/></div><div className="pomaa-intro-copy"><span className="pomaa-eyebrow">YOUR SCHOOL’S AI ASSISTANT</span><h2>A little help from Pomaa.</h2><p>From the first register to the last school bell. Ask, plan and get things moving.</p><div className="pomaa-intro-topics">{starters.slice(0,3).map(([label,prompt])=><button key={label} onClick={e=>launch(e,prompt)}>{label}<ArrowUpRight size={13}/></button>)}</div></div><button className="pomaa-primary" onClick={e=>launch(e)}><Sparkles size={16}/> Ask Pomaa <ArrowUpRight size={17}/></button></section>}
+    {page==='overview'&&<section className="pomaa-intro" aria-label="Pomaa school assistant"><div className="pomaa-orb"><Sparkles size={26}/></div><div className="pomaa-intro-copy"><span className="pomaa-eyebrow">YOUR SCHOOL’S AI ASSISTANT</span><h2>A little help from Pomaa.</h2><p>From the first register to the last school bell. Ask, plan and get things moving.</p><div className="pomaa-intro-topics">{startersFor(role,allowed).slice(0,3).map(([label,prompt])=><button key={label} onClick={e=>launch(e,prompt)}>{label}<ArrowUpRight size={13}/></button>)}</div></div><button className="pomaa-primary" onClick={e=>launch(e)}><Sparkles size={16}/> Ask Pomaa <ArrowUpRight size={17}/></button></section>}
 
 
 
@@ -150,7 +151,7 @@ export default function PomaaAssistant({db,role,identity,allowed,page,go,update,
 
 
 
-    {importing?<Suspense fallback={<p>Opening file importer…</p>}><PomaaImport db={db} role={role} allowed={allowed} commitImport={commitImport} live={live} go={module=>{go(module);close()}} back={()=>setImporting(false)}/></Suspense>:<>    <div className="pomaa-conversation" role="log" aria-live="polite" aria-relevant="additions"><div className="pomaa-welcome"><span>Hi, I’m Pomaa <Sparkles size={16}/></span><h3>What can I help you with?</h3><p>Ask about your school, prepare lessons and quizzes, review progress, draft messages and explore policies. Save useful results after reviewing them.</p><PomaaTools db={db} role={role} identity={identity} allowed={allowed} page={page} live={live} commitImport={commitImport} busy={busy} onPrompt={prompt=>{setInput(prompt);field.current?.focus()}}/>{!messages.length&&<div className="pomaa-starters">{starters.filter(([label])=>label!=='Add sample records'||role==='Admin').map(([label,prompt])=><button key={label} onClick={()=>{setInput(prompt);field.current?.focus()}}>{label}<ArrowUpRight size={15}/></button>)}</div>}</div>
+    {importing?<Suspense fallback={<p>Opening file importer…</p>}><PomaaImport db={db} role={role} allowed={allowed} commitImport={commitImport} live={live} go={module=>{go(module);close()}} back={()=>setImporting(false)}/></Suspense>:<>    <div className="pomaa-conversation" role="log" aria-live="polite" aria-relevant="additions"><div className="pomaa-welcome"><span>Hi, I’m Pomaa <Sparkles size={16}/></span><h3>What can I help you with?</h3><p>Ask about your school, prepare lessons and quizzes, review progress, draft messages and explore policies. Save useful results after reviewing them.</p><PomaaTools db={db} role={role} identity={identity} allowed={allowed} page={page} live={live} commitImport={commitImport} busy={busy} onPrompt={prompt=>{setInput(prompt);field.current?.focus()}}/>{!messages.length&&<div className="pomaa-starters">{startersFor(role,allowed).map(([label,prompt])=><button key={label} onClick={()=>{setInput(prompt);field.current?.focus()}}>{label}<ArrowUpRight size={15}/></button>)}</div>}</div>
 
 
 

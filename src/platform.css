@@ -27,3 +27,20 @@
 @media(max-width:1050px){.platform-header{gap:10px}.demo-status{align-items:flex-start;flex-direction:column;gap:6px}.integration-card{padding:18px}.finance-totals strong{font-size:20px}.advanced-platform .school-welcome h2{font-size:23px}}
 @media(max-width:760px){.advanced-platform .topbar{height:auto;min-height:80px;padding:13px 16px;align-items:flex-start}.platform-header{flex-wrap:wrap;justify-content:flex-end;gap:8px}.platform-header .search{display:none}.role-switch select{font-size:11px;padding:7px 10px;max-width:150px}.advanced-platform .menu{margin-top:17px}.advanced-platform .content{padding-top:15px}.advanced-platform .page-title{margin-top:0;padding-top:0}.advanced-platform .page-title .primary{width:auto}.finance-totals,.integration-row{grid-template-columns:1fr;gap:10px}.finance-totals>div{padding:16px;display:flex;justify-content:space-between;align-items:center}.finance-totals strong{margin:0;font-size:20px}.integration-card{display:grid;grid-template-columns:25px 1fr auto;gap:10px;align-items:center}.integration-card small{grid-column:2/-1}.settings-panel .form-row{grid-template-columns:1fr}.compose-panel .form-row{grid-template-columns:1fr}.module-tabs button{padding:8px 10px}.module-controls{gap:9px}.module-controls label{flex:1;min-width:140px}.platform-table{min-width:530px}.demo-status small{font-size:9px;line-height:1.5}.advanced-platform .school-welcome h2{font-size:23px}.advanced-platform .school-welcome{padding-right:95px}.advanced-platform .school-welcome .welcome-art{right:10px}.module-search-results{display:none}.advanced-platform .sidebar nav button{height:39px}}
 @media print{.advanced-platform .sidebar,.advanced-platform .topbar,.advanced-platform .demo-status,.advanced-platform .table-toolbar,.advanced-platform .page-title>button{display:none!important}.app-shell{display:block}.app-shell main{grid-column:auto}.platform-table-wrap{overflow:visible}.platform-table td,.platform-table th{color:#000}}
+.role-scope-note{border-left:3px solid #8b5cf6;background:#f6f2ff;color:#493778;padding:12px 16px;margin:0 0 18px;border-radius:0 8px 8px 0;font-size:13px}
+
+/* Keep the navigation on a single, full-height brand color. */
+.app-shell.advanced-platform .sidebar{background:#225e56;color:#fff;border-right:0}
+.app-shell.advanced-platform .sidebar .brand{color:#fff}
+.app-shell.advanced-platform .sidebar .brand span{color:#c5e3d9}
+.app-shell.advanced-platform .sidebar .brand-mark{background:#f3fff8;color:#225e56;box-shadow:0 5px 14px #103d3540}
+.app-shell.advanced-platform .sidebar .nav-label{color:#bbdbd1}
+.app-shell.advanced-platform .sidebar nav{scrollbar-color:#8fc4b5 transparent}
+.app-shell.advanced-platform .sidebar nav button{color:#e0f0e9}
+.app-shell.advanced-platform .sidebar nav button:hover{background:#ffffff1d;color:#fff}
+.app-shell.advanced-platform .sidebar nav button.active{background:#f4fff9;color:#225e56;box-shadow:0 5px 16px #123d3526}
+.app-shell.advanced-platform .sidebar nav button.active:after{background:#fa6d3b}
+.app-shell.advanced-platform .sidebar .school-switcher{border-color:#ffffff3d}
+.app-shell.advanced-platform .sidebar .school-switcher .crest{background:#e6f1ed;color:#225e56}
+.app-shell.advanced-platform .sidebar .school-switcher span{color:#c5e3d9}
+.app-shell.advanced-platform .sidebar .close-menu{color:#fff}
