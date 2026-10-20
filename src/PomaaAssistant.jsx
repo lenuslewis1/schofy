@@ -29,10 +29,11 @@ import {importTargets} from './import-core.mjs'
 
 
 const PomaaImport=lazy(()=>import('./PomaaImport'))
+const PomaaRecordReview=lazy(()=>import('./PomaaRecordReview'))
 
 
 
-const starters=[['School briefing','Give me a concise briefing on my school records and three useful priorities for today.'],['Fees & follow-up','Help me understand fee balances and what to follow up on.'],['Lesson planning','Help me plan a lesson. Ask me for the class, subject, topic and duration first.'],['Write a message','Help me draft a school announcement. Ask what I want to communicate and who it is for.']]
+const starters=[['School briefing','Give me a concise briefing on my school records and three useful priorities for today.'],['Fees & follow-up','Help me understand fee balances and what to follow up on.'],['Lesson planning','Help me plan a lesson. Ask me for the class, subject, topic and duration first.'],['Write a message','Help me draft a school announcement. Ask what I want to communicate and who it is for.'],['Add sample records','Populate my school with some dummy data.']]
 
 
 
@@ -45,6 +46,7 @@ export default function PomaaAssistant({db,role,identity,allowed,page,go,update,
 
 
   const [importing,setImporting]=useState(false)
+  const [recordReview,setRecordReview]=useState(null)
 
 
 
@@ -84,7 +86,7 @@ export default function PomaaAssistant({db,role,identity,allowed,page,go,update,
 
 
 
-  async function ask(e){e?.preventDefault();const question=input.trim();if(!question||requestLock.current)return;requestLock.current=true;setBusy(true);setError('');setInput('');setReview(null);setSaved('')
+  async function ask(e){e?.preventDefault();const question=input.trim();if(!question||requestLock.current)return;requestLock.current=true;setBusy(true);setError('');setInput('');setReview(null);setRecordReview(null);setSaved('')
 
 
 
@@ -120,7 +122,7 @@ export default function PomaaAssistant({db,role,identity,allowed,page,go,update,
 
 
 
-  function actionClick(action){if(action.type==='navigate'){go(action.module);close()}else {setReview(action);setDraft(action.body);setSaved('')}}
+  function actionClick(action){if(action.type==='navigate'){go(action.module);close()}else if(action.type==='create_records'){setReview(null);setRecordReview(action);setSaved('')}else {setRecordReview(null);setReview(action);setDraft(action.body);setSaved('')}}
 
 
 
@@ -140,7 +142,7 @@ export default function PomaaAssistant({db,role,identity,allowed,page,go,update,
 
 
 
-    {open&&<div className="pomaa-overlay" onMouseDown={e=>e.target===e.currentTarget&&close()}><section ref={dialog} className="pomaa-panel" role="dialog" aria-modal="true" aria-labelledby="pomaa-title" onKeyDown={keyboard}><header className="pomaa-header"><span className="pomaa-avatar"><Sparkles size={21}/></span><div><h2 id="pomaa-title">Pomaa</h2><p><i className={status==='connected'?'connected':''}/>{status==='connected'?`AI connected${model?' · '+model:''}`:status==='checking'?'Connecting…':'AI unavailable'} · Your school assistant</p></div><button className="pomaa-icon" aria-label="Start a new Pomaa chat" disabled={busy} onClick={()=>{setMessages([]);setError('');setReview(null);setSaved('');setInput('');field.current?.focus()}}><RotateCcw size={17}/></button><button className="pomaa-icon" aria-label="Close Pomaa" onClick={close}><X size={20}/></button></header>
+    {open&&<div className="pomaa-overlay" onMouseDown={e=>e.target===e.currentTarget&&close()}><section ref={dialog} className="pomaa-panel" role="dialog" aria-modal="true" aria-labelledby="pomaa-title" onKeyDown={keyboard}><header className="pomaa-header"><span className="pomaa-avatar"><Sparkles size={21}/></span><div><h2 id="pomaa-title">Pomaa</h2><p><i className={status==='connected'?'connected':''}/>{status==='connected'?`AI connected${model?' · '+model:''}`:status==='checking'?'Connecting…':'AI unavailable'} · Your school assistant</p></div><button className="pomaa-icon" aria-label="Start a new Pomaa chat" disabled={busy} onClick={()=>{setMessages([]);setError('');setReview(null);setRecordReview(null);setSaved('');setInput('');field.current?.focus()}}><RotateCcw size={17}/></button><button className="pomaa-icon" aria-label="Close Pomaa" onClick={close}><X size={20}/></button></header>
 
 
 
@@ -148,7 +150,7 @@ export default function PomaaAssistant({db,role,identity,allowed,page,go,update,
 
 
 
-    {importing?<Suspense fallback={<p>Opening file importer…</p>}><PomaaImport db={db} role={role} allowed={allowed} commitImport={commitImport} live={live} go={module=>{go(module);close()}} back={()=>setImporting(false)}/></Suspense>:<>    <div className="pomaa-conversation" role="log" aria-live="polite" aria-relevant="additions"><div className="pomaa-welcome"><span>Hi, I’m Pomaa <Sparkles size={16}/></span><h3>What can I help you with?</h3><p>Ask about your school, prepare lessons and quizzes, review progress, draft messages and explore policies. Save useful results after reviewing them.</p><PomaaTools db={db} role={role} identity={identity} allowed={allowed} page={page} live={live} commitImport={commitImport} busy={busy} onPrompt={prompt=>{setInput(prompt);field.current?.focus()}}/>{!messages.length&&<div className="pomaa-starters">{starters.map(([label,prompt])=><button key={label} onClick={()=>{setInput(prompt);field.current?.focus()}}>{label}<ArrowUpRight size={15}/></button>)}</div>}</div>
+    {importing?<Suspense fallback={<p>Opening file importer…</p>}><PomaaImport db={db} role={role} allowed={allowed} commitImport={commitImport} live={live} go={module=>{go(module);close()}} back={()=>setImporting(false)}/></Suspense>:<>    <div className="pomaa-conversation" role="log" aria-live="polite" aria-relevant="additions"><div className="pomaa-welcome"><span>Hi, I’m Pomaa <Sparkles size={16}/></span><h3>What can I help you with?</h3><p>Ask about your school, prepare lessons and quizzes, review progress, draft messages and explore policies. Save useful results after reviewing them.</p><PomaaTools db={db} role={role} identity={identity} allowed={allowed} page={page} live={live} commitImport={commitImport} busy={busy} onPrompt={prompt=>{setInput(prompt);field.current?.focus()}}/>{!messages.length&&<div className="pomaa-starters">{starters.filter(([label])=>label!=='Add sample records'||role==='Admin').map(([label,prompt])=><button key={label} onClick={()=>{setInput(prompt);field.current?.focus()}}>{label}<ArrowUpRight size={15}/></button>)}</div>}</div>
 
 
 
@@ -160,7 +162,9 @@ export default function PomaaAssistant({db,role,identity,allowed,page,go,update,
 
 
 
-      {error&&<div role="alert" className="pomaa-error">{error}<small>Your question is ready to retry below.</small></div>}
+      {error&&<div role="alert" className="pomaa-error">{error}<small>Review the message and try again.</small></div>}
+
+      {recordReview&&<Suspense fallback={<p>Opening record review…</p>}><PomaaRecordReview action={recordReview} db={db} role={role} allowed={allowed} commitImport={commitImport} onCancel={()=>setRecordReview(null)} onSaved={message=>{setRecordReview(null);setSaved(message)}} onError={message=>setError(message)}/></Suspense>}
 
 
 

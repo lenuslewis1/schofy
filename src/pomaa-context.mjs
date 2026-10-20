@@ -1,4 +1,6 @@
-import {policyContext} from './pomaa-workflows.mjs'
+import {policyContext} from './pomaa-workflows.mjs'
+import { importTargets } from './import-core.mjs'
+import { parseRecordProposal } from './pomaa-records.mjs'
 export const pomaaModules = ['overview','admissions','students','parents','teachers','classes','attendance','results','timetable','fees','communications','library','transport','hostel','users','settings','staff-attendance','progress','wellbeing']
 const list = value => Array.isArray(value) ? value : []
 const sum = (rows,key) => rows.reduce((n,r)=>n+(Number(r[key])||0),0)
@@ -9,7 +11,7 @@ export function pomaaContext(db, {role='Admin',learnerId='',allowed=pomaaModules
   const visible=new Set(allowed.filter(id=>pomaaModules.includes(id))), privateView=['Parent','Student'].includes(role)
   const students=list(db.students).filter(s=>!privateView||s.id===learnerId), names=new Set(students.map(s=>s.name)), ids=new Set(students.map(s=>s.id))
   const scope=rows=>list(rows).filter(r=>!privateView||names.has(r.student)||ids.has(r.studentId))
-  const context={school:db.settings?.name || 'School',role,currentPage:page,date:new Date().toISOString().slice(0,10),academicYear:db.settings?.year,period:db.settings?.period,currency:db.settings?.currency || 'GHS',allowedModules:[...visible],sampleLimit:40}
+  const context={school:db.settings?.name || 'School',schoolType:db.settings?.type || '',role,currentPage:page,date:new Date().toISOString().slice(0,10),academicYear:db.settings?.year,period:db.settings?.period,currency:db.settings?.currency || 'GHS',allowedModules:[...visible],sampleLimit:40}
   if(visible.has('students')||privateView) context.students={count:students.length,records:pick(students,['id','name','group','status'])}
   if(visible.has('teachers')) context.staff={count:list(db.teachers).length,records:pick(list(db.teachers),['name','subject','role','status'])}
   if(visible.has('classes')) context.classes=pick(list(db.classes).filter(c=>!privateView||students.some(s=>s.group===c.name)),['name','department','teacher','capacity','credits'])
@@ -29,10 +31,18 @@ export function pomaaContext(db, {role='Admin',learnerId='',allowed=pomaaModules
   return context
 }
 
-export function allowedPomaaActions(actions, allowed, role) {
-  return list(actions).slice(0,4).filter(a=>a&&typeof a.label==='string'&&a.label.length<=100&&(
-    a.type==='navigate'&&allowed.includes(a.module)||
-    a.type==='draft_resource'&&!['Parent','Student'].includes(role)&&allowed.includes(a.module)&&['classes','results','progress','timetable','overview'].includes(a.module)&&typeof a.body==='string'&&a.body.trim().length>0&&a.body.length<=12000||
-    a.type==='draft_message'&&allowed.includes('communications')&&!['Parent','Student'].includes(role)&&typeof a.body==='string'&&a.body.trim().length>0&&a.body.length<=5000
-  )).map(a=>({type:a.type,label:a.label,module:a.type==='draft_message'?'communications':a.module,body:a.type==='navigate'?'':a.body}))
-}
+export function allowedPomaaActions(actions, allowed, role) {
+  return list(actions).slice(0,4).flatMap(a=>{
+    if(!a||typeof a.label!=='string'||a.label.length>100)return []
+    if(a.type==='navigate'&&allowed.includes(a.module))return [{type:a.type,label:a.label,module:a.module,body:''}]
+    if(a.type==='draft_resource'&&!['Parent','Student'].includes(role)&&allowed.includes(a.module)&&['classes','results','progress','timetable','overview'].includes(a.module)&&typeof a.body==='string'&&a.body.trim().length>0&&a.body.length<=12000)return [{type:a.type,label:a.label,module:a.module,body:a.body}]
+    if(a.type==='draft_message'&&allowed.includes('communications')&&!['Parent','Student'].includes(role)&&typeof a.body==='string'&&a.body.trim().length>0&&a.body.length<=5000)return [{type:a.type,label:a.label,module:'communications',body:a.body}]
+    if(a.type==='create_records'){
+      try{
+        const proposal=parseRecordProposal(a.body,importTargets(role,allowed))
+        return [{type:a.type,label:a.label,module:'overview',body:JSON.stringify(proposal)}]
+      }catch{return []}
+    }
+    return []
+  })
+}
